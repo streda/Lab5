@@ -9,4 +9,4 @@ https://streda.github.io/Lab5/
 
 ## Part 2:
 
-https://streda.github.io/github-actions-for-ci/
+https://github.com/streda/github-actions-for-ci/
