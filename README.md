@@ -1,12 +1,12 @@
 # CSE110 SP21 Lab 5
 
 ## Author(s):
-- YOUR NAME
+- Samuel Reda
 
 ## Part 1:
 
-LINK TO YOUR PUBLISHED SITE
+https://streda.github.io/Lab5/
 
 ## Part 2:
 
-LINK TO YOUR PART 2 REPOSITORY
+https://streda.github.io/github-actions-for-ci/
