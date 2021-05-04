@@ -1,15 +1,124 @@
 // script.js
 
+const canvas = document.getElementById('user-image');
+//const topText = document.getElementById('text-top');
+//sconst bottomText = document.getElementById('text-bottom');
+
+
+const ctx = canvas.getContext('2d');
+ctx.fillStyle = 'black';
+ctx.fillRect(0,0, 400, 400);
+
 const img = new Image(); // used to load image from <input> and draw to canvas
+//img.src = 'images/mountains.jpg'
 
 // Fires whenever the img object loads a new image (such as with img.src =)
+
 img.addEventListener('load', () => {
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0,0, 400, 400);
+
+  let dims = getDimmensions(400, 400, img.width, img.height )
+  ctx.drawImage(img, dims.startX, dims.startY, dims.width, dims.height);
+
   // TODO
 
   // Some helpful tips:
   // - Fill the whole Canvas with black first to add borders on non-square images, then draw on top
   // - Clear the form when a new image is selected
   // - If you draw the image to canvas here, it will update as soon as a new image is selected
+});
+
+const imageInput = document.getElementById('image-input');
+imageInput.addEventListener('change', function ()  { 
+  //console.log(this.value);
+  img.src = URL.createObjectURL(this.files[0]);
+});
+
+
+const form  = document.getElementById('generate-meme');
+const textTop  = document.getElementById('text-top');
+const textBottom  = document.getElementById('text-bottom');
+form.addEventListener('submit', function(e){
+  e.preventDefault();
+  let textTopValue = textTop.value;
+  let textBottomValue = textBottom.value;
+  ctx.font = '30px Arial';
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'white';
+  ctx.fillText(textTopValue, 200, 50);
+  ctx.fillText(textBottomValue, 200, 350);
+  document.querySelectorAll('#button-group > button').forEach(function (button){
+  button.disabled = false;
+
+  });
+  document.querySelector('#generate-meme > button').disabled = true;
+});
+
+form.addEventListener('reset', function(e){
+  e.preventDefault();
+  ctx.fillStyle = 'black';
+  ctx.fillRect(0,0, 400, 400);
+
+  textTop.value = '';
+  textBottom.value = '';
+
+  document.querySelectorAll('#button-group > button').forEach(function (button){
+    button.disabled = true;
+
+  });
+  document.querySelector('#generate-meme > button').disabled = false;
+});
+
+const readTextButton = document.querySelector('#button-group > button:nth-child(2)');
+let speech = new SpeechSynthesisUtterance();
+readTextButton.addEventListener('click', function (){
+  //let speechTop = new SpeechSynthesisUtterance(textTop.value + ' ' + textBottom.value);
+  speech.text = textTop.value + ' ' + textBottom.value;
+  speechSynthesis.speak(speech);
+
+});
+
+const volumeSlider = document.querySelector('#volume-group > input');
+const volumeIcon = document.querySelector('#volume-group > img');
+volumeSlider.addEventListener('change', function(){
+  speech.volume = this.value / 100;
+  if (this.value === 0){
+    volumeIcon.src = 'icons/volume-level-0.svg';
+  }
+  else if(this.value >= 1 && this.value <= 33){
+    volumeIcon.src = 'icons/volume-level-1.svg';
+
+  }
+  else if(this.value >= 34 && this.value <= 66){
+    volumeIcon.src = 'icons/volume-level-2.svg';
+
+  }
+
+  else {
+    volumeIcon.src = 'icons/volume-level-3.svg';
+  }
+}); 
+
+const voices = document.getElementById('voice-selection');
+  speechSynthesis.onvoiceschanged = function(){
+  /* console.log(speechSynthesis.getVoices()); */
+  speechSynthesis.getVoices().forEach(function(voice){
+    /* console.log('high'); */
+    let voiceOption = document.createElement('option');
+    voiceOption.textContent = voice.name;
+    voices.appendChild(voiceOption);
+  });
+
+  voices.disabled = false;
+  }
+voices.addEventListener('change', function(){
+  let voiceList = speechSynthesis.getVoices();
+  for(let i =0 ; i < voiceList.length; i++){
+    if(voiceList[i].name === this.value){
+      speech.voice = voiceList[i];
+    }
+  }
 });
 
 /**
@@ -51,3 +160,5 @@ function getDimmensions(canvasWidth, canvasHeight, imageWidth, imageHeight) {
 
   return { 'width': width, 'height': height, 'startX': startX, 'startY': startY }
 }
+
+
