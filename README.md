@@ -2,7 +2,6 @@
 
 ## Author(s):
 - Samuel Reda
-- 
 - https://github.com/streda/Lab5.git
 
 ## Part 1:
